@@ -1,0 +1,65 @@
+﻿@model SPX.ViewModels.InvestmentsListViewModel
+@*Investor see customized offers based on their interests*@
+
+@{
+    ViewData["Title"] = "Investment";
+}
+
+<h1>Investment</h1>
+
+@if (!Model.Interests.Any())
+{
+    <p>
+        Your recommendations are based on <u>teams you are interested in.</u>
+        <br>
+        <a asp-action="ControlInterests">Add interested teams here</a>
+    </p>
+}
+else if (!Model.Buckets.Any())
+{
+    <p>
+        There are no matches based on your interests, please add more interested teams.
+        <br>
+        <a asp-action="ControlInterests">Add interested teams here</a>
+    </p>
+}
+else
+{
+    <a asp-action="ControlInterests">Manage your interested teams here</a>
+    <h5>These are buckets you might interest, accept offers to start trading</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Buckets)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a asp-action="AcceptOffer" asp-route-id="@item.Id">Accept Offer</a> |
+                        <a asp-action="DeclineOffer" asp-route-id="@item.Id">Decline Offer</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

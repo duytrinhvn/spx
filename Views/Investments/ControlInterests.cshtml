@@ -1,0 +1,37 @@
+﻿@model SPX.ViewModels.ControlInterestsViewModel
+
+<h2>Control your favourite sport teams</h2>
+
+<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Teams
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Teams) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @if (Model.InterestedTeamsIds.Contains(item.Id))
+                    {
+                        <a class="btn btn-danger" asp-action="DeleteInterest" asp-route-teamId="@item.Id">Remove</a>
+                    }
+                    else {
+                        <a class="btn btn-success" asp-action="AddInterest" asp-route-teamId="@item.Id">Add</a>
+                    }
+                </td>
+            </tr>
+    }
+        </tbody>
+</table>

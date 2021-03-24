@@ -1,0 +1,59 @@
+﻿@model SPX.ViewModels.BucketsCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Bucket</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+
+            <h5>Bucket's information</h5>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Bucket.Name" class="control-label"></label>
+                <input asp-for="Bucket.Name" class="form-control" />
+                <span asp-validation-for="Bucket.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bucket.Description" class="control-label"></label>
+                <input asp-for="Bucket.Description" class="form-control" />
+                <span asp-validation-for="Bucket.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bucket.Price" class="control-label"></label>
+                <input asp-for="Bucket.Price" class="form-control" />
+                <span asp-validation-for="Bucket.Price" class="text-danger"></span>
+            </div>
+            <hr />
+            <h5>Bucket's teams</h5>
+            <ul>
+                @for (var i = 0; i < Model.TeamSelections.Count; i++)
+                {
+                    <li>
+                        <input type="checkbox" asp-for="@Model.TeamSelections[i].Selected" />
+                        <label asp-for="@Model.TeamSelections[i].Selected">@Model.TeamSelections[i].Team.Name</label>
+                        <input type="hidden" asp-for="@Model.TeamSelections[i].Team.Id" />
+                        <input type="hidden" asp-for="@Model.TeamSelections[i].Team.Name" />
+                    </li>
+                }
+            </ul>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
