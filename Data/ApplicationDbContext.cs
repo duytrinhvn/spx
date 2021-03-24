@@ -15,9 +15,9 @@ namespace SPX.Data
         }
         public DbSet<Bucket> Buckets { get; set; }
         public DbSet<League> Leagues { get; set; }
-        public DbSet<Offer> Offers { get; set; }
         public DbSet<SportCategory> SportCategories { get; set; }
         public DbSet<Team> Teams { get; set; }
-
+        public DbSet<Interest> Interests { get; set; }
+        public DbSet<BucketTeamConnection> BucketTeamConnections { get; set; }
     }
 }

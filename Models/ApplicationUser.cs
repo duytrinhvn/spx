@@ -16,6 +16,5 @@ namespace SPX.Models
         public string LastName { get; set; }
 
         public string Address { get; set; }
-
     }
 }

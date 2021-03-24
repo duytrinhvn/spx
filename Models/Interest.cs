@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace SPX.Models
 {
-    public class SportCategory
+    public class Interest
     {
         [Key]
         public Guid Id { get; set; }
-        public String Name { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
+
+        public Team Team { get; set; }
     }
 }

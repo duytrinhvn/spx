@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPX.Data;
 
 namespace SPX.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210319184029_DeletedUserInterests")]
+    partial class DeletedUserInterests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,6 +163,9 @@ namespace SPX.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -238,54 +243,14 @@ namespace SPX.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<Guid?>("SportCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SportCategoryId");
 
                     b.ToTable("Buckets");
-                });
-
-            modelBuilder.Entity("SPX.Models.BucketTeamConnection", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BucketId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("TeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BucketId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("BucketTeamConnections");
-                });
-
-            modelBuilder.Entity("SPX.Models.Interest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("TeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Interests");
                 });
 
             modelBuilder.Entity("SPX.Models.League", b =>
@@ -300,9 +265,36 @@ namespace SPX.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SportCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("SportCategoryId");
+
                     b.ToTable("Leagues");
+                });
+
+            modelBuilder.Entity("SPX.Models.Offer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BucketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BucketId");
+
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("SPX.Models.SportCategory", b =>
@@ -334,14 +326,9 @@ namespace SPX.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SportCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LeagueId");
-
-                    b.HasIndex("SportCategoryId");
 
                     b.ToTable("Teams");
                 });
@@ -397,26 +384,25 @@ namespace SPX.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SPX.Models.BucketTeamConnection", b =>
+            modelBuilder.Entity("SPX.Models.Bucket", b =>
+                {
+                    b.HasOne("SPX.Models.SportCategory", "SportCategory")
+                        .WithMany()
+                        .HasForeignKey("SportCategoryId");
+                });
+
+            modelBuilder.Entity("SPX.Models.League", b =>
+                {
+                    b.HasOne("SPX.Models.SportCategory", null)
+                        .WithMany("Leagues")
+                        .HasForeignKey("SportCategoryId");
+                });
+
+            modelBuilder.Entity("SPX.Models.Offer", b =>
                 {
                     b.HasOne("SPX.Models.Bucket", "Bucket")
                         .WithMany()
                         .HasForeignKey("BucketId");
-
-                    b.HasOne("SPX.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId");
-                });
-
-            modelBuilder.Entity("SPX.Models.Interest", b =>
-                {
-                    b.HasOne("SPX.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("SPX.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("SPX.Models.Team", b =>
@@ -424,10 +410,6 @@ namespace SPX.Data.Migrations
                     b.HasOne("SPX.Models.League", "League")
                         .WithMany()
                         .HasForeignKey("LeagueId");
-
-                    b.HasOne("SPX.Models.SportCategory", "SportCategory")
-                        .WithMany()
-                        .HasForeignKey("SportCategoryId");
                 });
 #pragma warning restore 612, 618
         }

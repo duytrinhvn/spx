@@ -9,9 +9,10 @@ namespace SPX.Models
     public class Team
     {
         [Key]
-        public Guid Id { get; set; } 
+        public Guid Id { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }
+        public SportCategory SportCategory { get; set; }
         public League League { get; set; }
     }
 }

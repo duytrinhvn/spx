@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<SPX.Models.Bucket>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Buckets";
 }
 
-<h1>Index</h1>
+<h1>All buckets</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -18,6 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -29,6 +32,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

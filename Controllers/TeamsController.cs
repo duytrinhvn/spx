@@ -7,26 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SPX.Data;
 using SPX.Models;
-using SPX.ViewModels;
 
 namespace SPX.Controllers
 {
-    public class BucketsController : Controller
+    public class TeamsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public BucketsController(ApplicationDbContext context)
+        public TeamsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Buckets
+        // GET: Teams
         public async Task<IActionResult> List()
         {
-            return View(await _context.Buckets.ToListAsync());
+            return View(await _context.Teams.ToListAsync());
         }
 
-        // GET: Buckets/Details/5
+        // GET: Teams/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,42 +33,40 @@ namespace SPX.Controllers
                 return NotFound();
             }
 
-            var bucket = await _context.Buckets
+            var team = await _context.Teams
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bucket == null)
+            if (team == null)
             {
                 return NotFound();
             }
 
-            return View(bucket);
+            return View(team);
         }
 
-        // GET: Buckets/Create
+        // GET: Teams/Create
         public IActionResult Create()
         {
-            var teams = _context.Teams.ToList();
-            ViewData["Teams"] = teams;
             return View();
         }
 
-        // POST: Buckets/Create
+        // POST: Teams/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price")] Bucket bucket)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Team team)
         {
             if (ModelState.IsValid)
             {
-                bucket.Id = Guid.NewGuid();
-                _context.Add(bucket);
+                team.Id = Guid.NewGuid();
+                _context.Add(team);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("List");
+                return RedirectToAction(nameof(Index));
             }
-            return View(bucket);
+            return View(team);
         }
 
-        // GET: Buckets/Edit/5
+        // GET: Teams/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -77,22 +74,22 @@ namespace SPX.Controllers
                 return NotFound();
             }
 
-            var bucket = await _context.Buckets.FindAsync(id);
-            if (bucket == null)
+            var team = await _context.Teams.FindAsync(id);
+            if (team == null)
             {
                 return NotFound();
             }
-            return View(bucket);
+            return View(team);
         }
 
-        // POST: Buckets/Edit/5
+        // POST: Teams/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price")] Bucket bucket)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] Team team)
         {
-            if (id != bucket.Id)
+            if (id != team.Id)
             {
                 return NotFound();
             }
@@ -101,12 +98,12 @@ namespace SPX.Controllers
             {
                 try
                 {
-                    _context.Update(bucket);
+                    _context.Update(team);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BucketExists(bucket.Id))
+                    if (!TeamExists(team.Id))
                     {
                         return NotFound();
                     }
@@ -117,10 +114,10 @@ namespace SPX.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bucket);
+            return View(team);
         }
 
-        // GET: Buckets/Delete/5
+        // GET: Teams/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -128,30 +125,30 @@ namespace SPX.Controllers
                 return NotFound();
             }
 
-            var bucket = await _context.Buckets
+            var team = await _context.Teams
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bucket == null)
+            if (team == null)
             {
                 return NotFound();
             }
 
-            return View(bucket);
+            return View(team);
         }
 
-        // POST: Buckets/Delete/5
+        // POST: Teams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var bucket = await _context.Buckets.FindAsync(id);
-            _context.Buckets.Remove(bucket);
+            var team = await _context.Teams.FindAsync(id);
+            _context.Teams.Remove(team);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BucketExists(Guid id)
+        private bool TeamExists(Guid id)
         {
-            return _context.Buckets.Any(e => e.Id == id);
+            return _context.Teams.Any(e => e.Id == id);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model SPX.Models.Bucket
+﻿@model SPX.ViewModels.BucketsCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,17 +11,36 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+
+            <h5>Bucket's information</h5>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Bucket.Name" class="control-label"></label>
+                <input asp-for="Bucket.Name" class="form-control" />
+                <span asp-validation-for="Bucket.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Bucket.Description" class="control-label"></label>
+                <input asp-for="Bucket.Description" class="form-control" />
+                <span asp-validation-for="Bucket.Description" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Bucket.Price" class="control-label"></label>
+                <input asp-for="Bucket.Price" class="form-control" />
+                <span asp-validation-for="Bucket.Price" class="text-danger"></span>
+            </div>
+            <hr />
+            <h5>Bucket's teams</h5>
+
+            @foreach (var team in ViewData["Teams"] as IList<Team>)
+            {
+                <div class="form-group">
+                    <input type="checkbox" value="@team" asp-for="Teams" >
+                    <label asp-for="Teams"> @team.Name</label>
+                </div>
+            }
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
