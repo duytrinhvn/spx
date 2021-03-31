@@ -16,6 +16,7 @@ namespace SPX.Models
 
         public String Description { get; set; }
 
+        [Display(Name = "Sport Category")]
         public SportCategory SportCategory { get; set; }
 
         public League League { get; set; }

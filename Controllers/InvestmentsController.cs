@@ -19,18 +19,20 @@ namespace SPX.Controllers
         private readonly ApplicationDbContext context;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly String userId;
 
         public InvestmentsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
+
+            userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
         // GET: InvestController
         public async Task<ActionResult> Index()
         {
-            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await userManager.FindByIdAsync(userId);
 
             var interests = context.Interests.ToList();
@@ -84,7 +86,6 @@ namespace SPX.Controllers
 
         public async Task<RedirectToActionResult> AddInterest(string teamId)
         {
-            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (userId != null && teamId != null)
             {
                 var team = await context.Teams.FindAsync(Guid.Parse(teamId));
@@ -99,7 +100,6 @@ namespace SPX.Controllers
 
         public async Task<RedirectToActionResult> DeleteInterest(string teamId)
         {
-            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (userId != null && teamId != null)
             {
                 var team = await context.Teams.FindAsync(Guid.Parse(teamId));
@@ -117,7 +117,6 @@ namespace SPX.Controllers
 
         public async Task<ActionResult> ControlInterests()
         {
-            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await userManager.FindByIdAsync(userId);
 
             var teams = context.Teams.ToList();

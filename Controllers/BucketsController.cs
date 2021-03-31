@@ -41,12 +41,18 @@ namespace SPX.Controllers
 
             var bucket = await _context.Buckets
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var teams = await FindTeamsInBucket(id);
+
             if (bucket == null)
             {
                 return NotFound();
             }
 
-            return View(bucket);
+            return View(new BucketsDetailsDeleteViewModel { 
+                Bucket = bucket,
+                Teams = teams 
+            });
         }
 
         // GET: Buckets/Create
@@ -125,7 +131,19 @@ namespace SPX.Controllers
             {
                 return NotFound();
             }
-            return View(bucket);
+
+            TeamSelections = new List<TeamSelected>();
+            var teams = _context.Teams.ToList();
+            var selectedTeams = await FindTeamsInBucket(id);
+
+            teams.ForEach((team) => {
+                TeamSelections.Add(new TeamSelected { Id = Guid.NewGuid(), Team = team, Selected = selectedTeams.Contains(team) });
+            });
+
+            return View(new BucketsCreateViewModel { 
+                TeamSelections = TeamSelections,
+                Bucket = bucket
+            });
         }
 
         // POST: Buckets/Edit/5
@@ -178,11 +196,22 @@ namespace SPX.Controllers
                 return NotFound();
             }
 
+            List<Team> teams = await FindTeamsInBucket(id);
+
+            return View(new BucketsDetailsDeleteViewModel
+            {
+                Bucket = bucket,
+                Teams = teams
+            });
+        }
+
+        private async Task<List<Team>> FindTeamsInBucket(Guid? bucketId)
+        {
             // Find all teams in this bucket
             var bucketTeamConnections = await _context.BucketTeamConnections.ToListAsync();
             var teamFKs = (from connection in bucketTeamConnections
-                         where connection.BucketFK == id
-                         select connection.TeamFK).ToList();
+                           where connection.BucketFK == bucketId
+                           select connection.TeamFK).ToList();
             var allTeams = _context.Teams.ToList();
             var teams = new List<Team>();
             teamFKs.ForEach((id) =>
@@ -192,12 +221,7 @@ namespace SPX.Controllers
                             select t).FirstOrDefault();
                 teams.Add(team);
             });
-
-            return View(new BucketsDeleteViewModel
-            {
-                Bucket = bucket,
-                Teams = teams
-            });
+            return teams;
         }
 
         // POST: Buckets/Delete/5

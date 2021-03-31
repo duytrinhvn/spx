@@ -205,3 +205,6 @@ D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Buckets\Edit.csht
 D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Buckets\Index.cshtml.g.cs
 D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Investments\ControlInterests.cshtml.g.cs
 D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Investments\Index.cshtml.g.cs
+D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Buckets\List.cshtml.g.cs
+D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Investments\List.cshtml.g.cs
+D:\source\projects\spx\SPX\obj\Debug\netcoreapp3.1\Razor\Views\Teams\List.cshtml.g.cs

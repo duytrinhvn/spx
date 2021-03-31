@@ -1,10 +1,10 @@
-﻿@model IEnumerable<SPX.Models.Team>
+﻿@model IEnumerable<SPX.Models.Bucket>
 
 @{
-    ViewData["Title"] = "All teams";
+    ViewData["Title"] = "Buckets";
 }
 
-<h1>All teams</h1>
+<h1>All buckets</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -19,10 +19,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SportCategory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.League)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
@@ -37,10 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SportCategory.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.League.Name)
+                @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

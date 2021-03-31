@@ -51,8 +51,8 @@ namespace SPX.Controllers
         // GET: Teams/Create
         public IActionResult Create()
         {
-            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Id");
-            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Id");
+            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Name");
+            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Name");
             return View();
         }
 
@@ -88,8 +88,8 @@ namespace SPX.Controllers
             {
                 return NotFound();
             }
-            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Id", team.LeagueFK);
-            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Id", team.SportCategoryFK);
+            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Name", team.LeagueFK);
+            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Name", team.SportCategoryFK);
             return View(team);
         }
 
@@ -125,8 +125,8 @@ namespace SPX.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Id", team.LeagueFK);
-            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Id", team.SportCategoryFK);
+            ViewData["LeagueFK"] = new SelectList(_context.Leagues, "Id", "Name", team.LeagueFK);
+            ViewData["SportCategoryFK"] = new SelectList(_context.SportCategories, "Id", "Name", team.SportCategoryFK);
             return View(team);
         }
 
