@@ -82,19 +82,7 @@ namespace SPX.Controllers
 
                 var allTeams = _context.Teams.ToList();
 
-                // Find selected teams
-                var teamSelectedIds = (from teamSelected in TeamSelections
-                                       where teamSelected.Selected == true
-                                       select teamSelected.Team.Id).ToList();
-                var teams = new List<Team>();
-                teamSelectedIds.ForEach((id) =>
-                {
-                    var team = (from t in allTeams
-                                where t.Id == id
-                                select t).FirstOrDefault();
-                    teams.Add(team);
-                });
-
+                var teams = FindSelectedTeams();
 
                 // Create a bucketTeamConnection array object
                 var bucketTeamConnections = new List<BucketTeamConnection>();
@@ -153,30 +141,36 @@ namespace SPX.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price")] Bucket bucket)
         {
-            if (id != bucket.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                // Clear all connections in this bucket
+                int result = await RemoveConnectionsByBucketId(bucket.Id);
+
+                if(!( result>0))
                 {
-                    _context.Update(bucket);
-                    await _context.SaveChangesAsync();
+                    return View(bucket);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BucketExists(bucket.Id))
+
+                var teams = FindSelectedTeams();
+
+                // Create a bucketTeamConnection array object
+                var bucketTeamConnections = new List<BucketTeamConnection>();
+
+                // Loop through teams to update connections
+                teams.ForEach((team) => {
+                    bucketTeamConnections.Add(new BucketTeamConnection
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                        Id = Guid.NewGuid(),
+                        BucketFK = bucket.Id,
+                        TeamFK = team.Id
+                    });
+                });
+
+                _context.Buckets.Update(bucket);
+                await _context.BucketTeamConnections.AddRangeAsync(bucketTeamConnections);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
             return View(bucket);
         }
@@ -205,6 +199,38 @@ namespace SPX.Controllers
             });
         }
 
+        // POST: Buckets/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var bucket = await _context.Buckets.FindAsync(id);
+
+            await RemoveConnectionsByBucketId(id);
+
+            _context.Buckets.Remove(bucket);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool BucketExists(Guid id)
+        {
+            return _context.Buckets.Any(e => e.Id == id);
+        }
+
+        // delete all connections relate to this bucket
+        private async Task<int> RemoveConnectionsByBucketId(Guid id)
+        {
+            var bucketTeamConnections = await _context.BucketTeamConnections.ToListAsync();
+            bucketTeamConnections.ForEach((connection) => {
+                if (connection.BucketFK == id)
+                {
+                    _context.Remove(connection);
+                }
+            });
+            return 1;
+        }
+
         private async Task<List<Team>> FindTeamsInBucket(Guid? bucketId)
         {
             // Find all teams in this bucket
@@ -224,30 +250,23 @@ namespace SPX.Controllers
             return teams;
         }
 
-        // POST: Buckets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        private List<Team> FindSelectedTeams()
         {
-            var bucket = await _context.Buckets.FindAsync(id);
-
-            // delete all connections relate to this bucket
-            var bucketTeamConnections = await _context.BucketTeamConnections.ToListAsync();
-            bucketTeamConnections.ForEach((connection) => { 
-                if(connection.BucketFK == id)
-                {
-                    _context.Remove(connection);
-                }
+            // Find selected teams
+            var allTeams = _context.Teams.ToList();
+            var teamSelectedIds = (from teamSelected in TeamSelections
+                                   where teamSelected.Selected == true
+                                   select teamSelected.Team.Id).ToList();
+            var teams = new List<Team>();
+            teamSelectedIds.ForEach((id) =>
+            {
+                var team = (from t in allTeams
+                            where t.Id == id
+                            select t).FirstOrDefault();
+                teams.Add(team);
             });
 
-            _context.Buckets.Remove(bucket);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool BucketExists(Guid id)
-        {
-            return _context.Buckets.Any(e => e.Id == id);
+            return teams;
         }
     }
 }

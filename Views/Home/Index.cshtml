@@ -2,7 +2,181 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <style>
+        #controls, figcaption, div {
+            text-align: center;
+        }
+
+            #controls div {
+                padding-right: .25em;
+                cursor: pointer;
+            }
+
+        #cubeRound {
+            -webkit-perspective: 800;
+            -moz-perspective: 800px;
+            -ms-perspective: 800;
+            perspective: 800;
+            -webkit-perspective-origin: 50% 100px;
+            -moz-perspective-origin: 50% 100px;
+            -ms-perspective-origin: 50% 100px;
+            perspective-origin: 50% 100px;
+            -webkit-transform-style: preserve-3d;
+            -moz-transform-style: preserve-3d;
+            -ms-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            margin: 50px auto 20px auto;
+            width: 450px;
+            height: 380px;
+        }
+
+            #cubeRound #cubeRotation {
+                position: relative;
+                margin: 0 auto;
+                height: 231px;
+                width: 450px;
+                -webkit-transform-style: preserve-3d;
+                -moz-transform-style: preserve-3d;
+                -ms-transform-style: preserve-3d;
+                transform-style: preserve-3d;
+                -webkit-transform-origin: 50% 50px 0;
+                -moz-transform-origin: 50% 50px 0;
+                -ms-transform-origin: 50% 50px 0;
+                transform-origin: 50% 50px 0;
+                -webkit-transition: all 1.0s ease-in-out;
+                -moz-transition: all 1.0s ease-in-out;
+                -ms-transition: all 1.0s ease-in-out;
+                transition: all 1.0s ease-in-out;
+            }
+
+            #cubeRound .face {
+                position: absolute;
+                height: 251px;
+                width: 450px;
+                padding: 0px;
+            }
+
+        img {
+            height: 251px;
+            width: 450px;
+        }
+
+
+        #cubeRotation .first {
+            -webkit-transform: translateZ(225px);
+            -moz-transform: translateZ(225px);
+            -ms-transform: translateZ(225px);
+            transform: translateZ(225px);
+        }
+
+        #cubeRotation .second {
+            -webkit-transform: rotateY(90deg) translateZ(225px);
+            -moz-transform: rotateY(90deg) translateZ(225px);
+            -ms-transform: rotateY(90deg) translateZ(225px);
+            transform: rotateY(90deg) translateZ(225px);
+        }
+
+        #cubeRotation .third {
+            -webkit-transform: rotateY(180deg) translateZ(225px);
+            -moz-transform: rotateY(180deg) translateZ(225px);
+            -ms-transform: rotateY(180deg) translateZ(225px);
+            transform: rotateY(180deg) translateZ(225px);
+        }
+
+        #cubeRotation .fourth {
+            -webkit-transform: rotateY(-90deg) translateZ(225px);
+            -moz-transform: rotateY(-90deg) translateZ(225px);
+            -ms-transform: rotateY(-90deg) translateZ(225px);
+            transform: rotateY(-90deg) translateZ(225px);
+        }
+
+        .circle {
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        #outerCircle {
+            width: 50px;
+            height: 50px;
+            background: black;
+            position: relative;
+        }
+
+        #innerCircle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            position: absolute;
+            top: 24%;
+            left: 24%;
+            display: block;
+            border: 3px solid #fff;
+        }
+
+        .selected {
+            background: grey;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+
+            $("#controls").on('click', 'div', function () {
+                $("#cubeRotation").css("transform", "rotateY(" + ($(this).index() * -90) + "deg)");
+                $("#controls div").removeClass("selected");
+                $(this).addClass("selected");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+        <h1>Welcome to SPX!</h1>
+        <h3>The Future of Sports Trading!</h3>
+        <div id="cubeRound">
+            <div id="cubeRotation">
+                <figure class="face first">
+                    <img src="~/Images/carousel1.jpg" />
+                    <figcaption>Begin trading with SPX!</figcaption>
+                </figure>
+                <figure class="face second">
+                    <img src="~/Images/carousel2.jpg" />
+                    <figcaption>Made by fans meant for fans.</figcaption>
+                </figure>
+                <figure class="face third">
+                    <img src="~/Images/carousel3.jpg" />
+                    <figcaption>We specialize in creating offers you may be interested in.</figcaption>
+                </figure>
+                <figure class="face fourth">
+                    <img src="~/Images/carousel4.jpg" />
+                    <figcaption> Many teams avaliable to buy now!</figcaption>
+                </figure>
+            </div>
+        </div>
+        <div id="controls">
+            <div id="outerCircle" class="circle selected">
+                <div id="innerCircle" class="circle"> </div>
+            </div>
+            <div id="outerCircle" class="circle">
+                <div id="innerCircle" class="circle"> </div>
+            </div>
+            <div id="outerCircle" class="circle">
+                <div id="innerCircle" class="circle">  </div>
+            </div>
+            <div id="outerCircle" class="circle">
+                <div id="innerCircle" class="circle">  </div>
+            </div>
+        </div>
+        <h3> The World's First Sports Stock Market!</h3>
+        <p>
+            Here at SPX we .............
+            specializing in the sport market.......
+            ..........We offer great buckets meant for you
+            ........No fees for signing up at all...
+            ......SPX is made by fans meant for fans of the game!
+        </p>
+    </div>
+</body>

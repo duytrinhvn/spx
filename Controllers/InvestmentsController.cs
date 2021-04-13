@@ -134,5 +134,10 @@ namespace SPX.Controllers
                 InterestedTeamsIds = currentUserInterestedTeamsIds
             });
         }
+
+        public ActionResult UnderDevelopment()
+        {
+            return View();
+        }
     }
 }
